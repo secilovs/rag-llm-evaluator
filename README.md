@@ -1,5 +1,5 @@
 # 🔍 RAG + LLM Evaluation System
-![LLM Evaluation Engine](project_image_800x600.png)
+![LLM Evaluation Engine](llm_evaluation_engine_800x600.png)
 > Accuracy: ~91.7% on mixed query batch test
 
 A deterministic evaluation framework that tests whether an LLM provides
