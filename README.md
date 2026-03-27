@@ -161,6 +161,8 @@ Applicable to:
 
 
 
-👤 Author
-Secil Bayar
-Environmental Engineer (PhD) → LLM Evaluation & AI Systems
+<br><br><br><br><br>
+
+<p align="center" style="font-size: 11px; opacity: 0.6;">
+  👤 Seçil Bayar — Environmental Engineer (PhD) → LLM Evaluation & AI Systems
+</p>
