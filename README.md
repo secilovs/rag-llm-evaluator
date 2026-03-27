@@ -11,7 +11,7 @@ This project addresses a key question:
 
 ![LLM Evaluation Engine](llm_evaluation_engine_800x600.png)
 
-*Deterministic LLM evaluation pipeline with ground truth validation*
+*Deterministic evaluation pipeline enforcing factual correctness using ground truth (no LLM judgment)*
 
 ---
 
