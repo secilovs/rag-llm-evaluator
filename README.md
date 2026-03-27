@@ -159,6 +159,8 @@ Applicable to:
 - regulatory and compliance-focused AI applications  
 
 
+
+
 👤 Author
 Secil Bayar
 Environmental Engineer (PhD) → LLM Evaluation & AI Systems
