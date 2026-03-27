@@ -157,3 +157,8 @@ Applicable to:
 - AI evaluation roles  
 - LLM QA / benchmarking systems  
 - regulatory and compliance-focused AI applications  
+
+
+👤 Author
+Secil Bayar
+Environmental Engineer (PhD) → LLM Evaluation & AI Systems
