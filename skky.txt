@@ -1,0 +1,3 @@
+BOD: 25 mg/L
+COD: 125 mg/L
+SS: 35 mg/L

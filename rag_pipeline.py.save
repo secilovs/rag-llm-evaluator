@@ -1,0 +1,110 @@
+import requests
+import os
+
+from sentence_transformers import SentenceTransformer
+import chromadb
+
+def ask_groq(context):
+    api_key = os.getenv("GROQ_API_KEY")
+
+    url = "https://api.groq.com/openai/v1/chat/completions"
+
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+
+    prompt = f"Answer based only on this context:\n{context}"
+
+    data = {
+        "model": "llama-3.3-70b-versatile",
+        "messages": [
+            {"role": "user", "content": prompt}
+        ]
+    }
+
+    response = requests.post(url, headers=headers, json=data)
+    return response.json()["choices"][0]["message"]["content"]
+
+
+context = " ".join(results["documents"][0])
+
+answer = ask_groq(context)
+
+print("\nGROQ ANSWER:\n", answer)
+
+# chunk function
+def chunk_text(text, chunk_size=200, overlap=50):
+    words = text.split()
+    chunks = []
+
+    for i in range(0, len(words), chunk_size - overlap):
+        chunk = " ".join(words[i:i + chunk_size])
+        chunks.append(chunk)
+
+    return chunks
+
+
+# model
+model = SentenceTransformer("all-MiniLM-L6-v2")
+
+# db
+client = chromadb.Client()
+collection = client.create_collection(name="rag_test")
+
+# text (EPA gibi düşün)
+with open("epa.txt", "r") as f:
+    text = f.read()
+# chunking
+chunks = chunk_text(text)
+
+# embedding
+embeddings = model.encode(chunks)
+
+# store
+collection.add(
+    documents=chunks,
+    embeddings=embeddings.tolist(),
+    ids=[str(i) for i in range(len(chunks))]
+)
+
+# query
+query = "BOD5 30 day average limit mg/L secondary treatment"
+query_embedding = model.encode([query])
+
+results = collection.query(
+    query_embeddings=query_embedding.tolist(),
+    n_results=2
+)
+print(results['documents'])
+found = False
+
+for doc in results['documents'][0]:
+    for line in doc.split("."):
+  import requests
+import os
+from sentence_transformers import SentenceTransformer
+import chromadb
+
+def chunk_text(text, chunk_size=200, overlap=50):
+    words = text.split()
+    chunks = []
+
+    for i in range(0, len(words), chunk_size - overlap):
+        chunk = " ".join(words[i:i + chunk_size])
+        chunks.append(chunk)
+
+    return chunks
+
+model = SentenceTransformer("all-MiniLM-L6-v2")
+
+client = chromadb.Client()
+collection = client.create_collection(name="rag_test")
+
+with open("epa.txt", "r") as f:
+    text = f.read()
+
+chunks = chunk_text(text)
+
+embeddings = model.encode(chunks)
+
