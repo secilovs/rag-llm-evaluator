@@ -5,101 +5,80 @@
 A deterministic evaluation framework that tests whether an LLM provides correct answers based on environmental regulation data (EPA & SKKY).
 
 
+## 🚨 Why This Project Exists
+
+LLMs often generate answers that sound correct but are factually wrong (hallucinations).  
+This makes them unreliable in domains where accuracy is critical, such as environmental regulations.
+
+This project addresses a key question:
+
+**"Is the model actually correct — or just sounding correct?"**
+
 ---
 
-## 🎯 Purpose
+## 🎯 What This System Does
 
-This is **not a chatbot**.  
-It is an **LLM evaluation system** designed to answer:
+This is not a chatbot.
 
-> *"Is the model's answer correct — and by how much?"*
+It is an **evaluation engine** that:
+- generates answers using an LLM
+- validates them against real-world regulatory data
+- produces an objective correctness decision
 
 ---
 
 ## 🧠 System Architecture
-```
-User Question
-     ↓
-RAG Pipeline (ChromaDB + Sentence Transformers)
-     ↓
-LLM (Groq API – Llama 3.1)
-     ↓
-Ground Truth Engine (rule-based, deterministic)
-     ↓
-Evaluator (compares answer vs. ground truth)
-```
+
+User Question  
+↓  
+RAG Pipeline (ChromaDB + Sentence Transformers)  
+↓  
+LLM (Groq API – Llama 3.1)  
+↓  
+Ground Truth Engine (rule-based, deterministic)  
+↓  
+Evaluator (numeric + semantic comparison)
+
+---
+
+## ⚙️ Core Capabilities
+
+- Deterministic ground truth validation (no LLM bias)
+- Numeric extraction using regex
+- Rule-based correctness checking
+- RAG-based context retrieval
+- Batch evaluation for scalability
+- Quantitative accuracy metrics
+
+---
 
 ## 🧠 Evaluation Pipeline
 
-The system evaluates LLM outputs using a deterministic ground truth comparison pipeline.
+1. **Ground Truth Retrieval**  
+   Regulatory values (EPA & SKKY) are retrieved via RAG
 
-### 1. Ground Truth Retrieval
-Relevant regulatory values (EPA & SKKY) are retrieved using the RAG pipeline.
+2. **Answer Parsing**  
+   Extract key parameters (BOD, COD, pH) using regex
 
-### 2. Answer Parsing
-The LLM response is parsed to extract key parameters (e.g., pH, BOD, COD) using regex-based rules.
+3. **Deterministic Comparison**  
+   - Exact match → correct  
+   - Mismatch → incorrect  
 
-### 3. Deterministic Comparison
-Extracted values are compared with ground truth:
-- Exact match → correct
-- Mismatch → incorrect
+4. **Semantic Validation**  
+   - Relevance to question  
+   - Consistency with retrieved context  
 
-### 4. Semantic Validation
-Responses are also checked for:
-- Relevance to the query
-- Consistency with retrieved context
-
-### 5. Final Decision
-Each response is labeled as:
-- `correct`
-- `incorrect`
----
-
-## ⚙️ Features
-
-- 🔎 **RAG** — ChromaDB + Sentence Transformers for context retrieval
-- 🤖 **LLM** — Groq API (Llama 3.1) for answer generation
-- 📊 **Ground Truth Engine** — rule-based, deterministic validation
-- ✅ **Smart Evaluator** — numeric + semantic comparison
-- 🧪 **Batch Testing** — run multiple queries at once
-- 📈 **Accuracy Calculation** — quantified evaluation output
-
----
-
-## 📦 Tech Stack
-
-| Component | Technology |
-|---|---|
-| Language | Python 3.10+ |
-| Vector Store | ChromaDB |
-| Embeddings | Sentence Transformers |
-| LLM API | Groq (Llama 3.1) |
-| Parsing | Regex |
-
----
-
-## 🚀 Getting Started
-```bash
-git clone https://github.com/secilovs/rag-llm-evaluator.git
-cd rag-llm-evaluator
-pip install -r requirements.txt
-python main.py
-```
-
-> Set your Groq API key as an environment variable:  
-> `export GROQ_API_KEY=your_key_here`
+5. **Final Decision**  
+   Output: `correct` / `incorrect`
 
 ---
 
 ## 📊 Example Output
 
-**Input:**
-```
+Input:
 pH limit EPA?
-```
 
-**Output:**
-```json
+Output:
 {
   "parameter": "PH",
   "ground_truth": "6.0-9.0",
@@ -107,37 +86,75 @@ pH limit EPA?
   "evaluation": "correct",
   "source": "EPA"
 }
-```
 
-**Batch Test Result:**
-```
+Batch Result:
 Total: 12 | Correct: 11 | Accuracy: 91.67%
-```
 
 ---
 
-## ⚠️ Current Limitations
+## 📦 Tech Stack
 
-- Ambiguous queries may fail (e.g., "Turkey EPA" without source specification)
-- Basic source detection logic
+| Component       | Technology                  |
+|----------------|---------------------------|
+| Language        | Python 3.10+              |
+| Vector Store    | ChromaDB                  |
+| Embeddings      | Sentence Transformers     |
+| LLM             | Groq (Llama 3.1)          |
+| Parsing         | Regex                     |
+
+---
+
+## 🚀 Getting Started
+
+git clone https://github.com/secilovs/rag-llm-evaluator.git  
+cd rag-llm-evaluator  
+pip install -r requirements.txt  
+python main.py  
+
+Set API key:
+
+export GROQ_API_KEY=your_key_here
+
+---
+
+## ⚠️ Limitations
+
+- Ambiguous queries may fail (e.g., missing source)
 - Limited to EPA and SKKY datasets
+- Basic source detection logic
 
 ---
 
 ## 🔮 Roadmap
 
-- [ ] Improved query understanding (NER / intent detection)
-- [ ] Multi-source conflict resolution
-- [ ] Larger regulation dataset
-- [ ] RAGAS integration for advanced evaluation metrics
+- Improved query understanding (NER / intent detection)
+- Multi-source conflict resolution
+- Expanded regulatory datasets
+- Advanced evaluation metrics (RAGAS)
 
 ---
 
 ## 💡 Key Insight
 
-> This project focuses on **evaluation**, not generation.  
-> The goal: measure whether the model is *correct* — not just fluent.
+Fluency ≠ correctness.
+
+This system enforces **deterministic evaluation using ground truth data**, ensuring that LLM outputs are not only relevant but factually accurate.
+
+Unlike typical evaluation approaches:
+- it does not rely on LLM self-judgment  
+- it provides objective, rule-based validation  
 
 ---
 
-*Built with 🌿 environmental data and a focus on LLM reliability.*
+## 🎯 Why It Matters
+
+This project demonstrates the ability to:
+
+- evaluate LLM outputs beyond surface-level fluency
+- design deterministic validation systems
+- build reliable pipelines for high-stakes domains
+
+Applicable to:
+- AI evaluation roles
+- LLM QA / benchmarking systems
+- regulatory and compliance-focused AI applications
