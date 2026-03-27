@@ -1,9 +1,4 @@
-# 🔍 RAG + LLM Evaluation System
-
-![LLM Evaluation Engine](llm_evaluation_engine_800x600.png)
-
-A deterministic evaluation framework that tests whether an LLM provides correct answers based on environmental regulation data (EPA & SKKY).
-
+# 🔍 RAG + LLM Evaluation Engine
 
 ## 🚨 Why This Project Exists
 
@@ -13,6 +8,10 @@ This makes them unreliable in domains where accuracy is critical, such as enviro
 This project addresses a key question:
 
 **"Is the model actually correct — or just sounding correct?"**
+
+![LLM Evaluation Engine](llm_evaluation_engine_800x600.png)
+
+*Deterministic LLM evaluation pipeline with ground truth validation*
 
 ---
 
@@ -43,7 +42,7 @@ Evaluator (numeric + semantic comparison)
 
 ## ⚙️ Core Capabilities
 
-- Deterministic ground truth validation (no LLM bias)
+- Deterministic validation WITHOUT relying on LLM judgment
 - Numeric extraction using regex
 - Rule-based correctness checking
 - RAG-based context retrieval
@@ -75,7 +74,7 @@ Evaluator (numeric + semantic comparison)
 
 ## 📊 Example Output
 
-Input:
+Input:  
 pH limit EPA?
 
 Output:
@@ -87,20 +86,20 @@ Output:
   "source": "EPA"
 }
 
-Batch Result:
+Batch Result:  
 Total: 12 | Correct: 11 | Accuracy: 91.67%
 
 ---
 
 ## 📦 Tech Stack
 
-| Component       | Technology                  |
-|----------------|---------------------------|
-| Language        | Python 3.10+              |
-| Vector Store    | ChromaDB                  |
-| Embeddings      | Sentence Transformers     |
-| LLM             | Groq (Llama 3.1)          |
-| Parsing         | Regex                     |
+| Component       | Technology              |
+|----------------|------------------------|
+| Language       | Python 3.10+           |
+| Vector Store   | ChromaDB               |
+| Embeddings     | Sentence Transformers  |
+| LLM            | Groq (Llama 3.1)       |
+| Parsing        | Regex                  |
 
 ---
 
@@ -155,6 +154,7 @@ This project demonstrates the ability to:
 - build reliable pipelines for high-stakes domains
 
 Applicable to:
-- AI evaluation roles
-- LLM QA / benchmarking systems
-- regulatory and compliance-focused AI applications
+
+- AI evaluation roles  
+- LLM QA / benchmarking systems  
+- regulatory and compliance-focused AI applications  
