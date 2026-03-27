@@ -1,5 +1,9 @@
 # 🔍 RAG + LLM Evaluation System
+
 ![LLM Evaluation Engine](llm_evaluation_engine_800x600.png)
+
+A deterministic evaluation framework that tests whether an LLM provides correct answers based on environmental regulation data (EPA & SKKY).
+
 > Accuracy: ~91.7% on mixed query batch test
 
 A deterministic evaluation framework that tests whether an LLM provides
