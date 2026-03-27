@@ -29,6 +29,30 @@ Ground Truth Engine (rule-based, deterministic)
 Evaluator (compares answer vs. ground truth)
 ```
 
+## 🧠 Evaluation Pipeline
+
+The system evaluates LLM outputs using a deterministic ground truth comparison pipeline.
+
+### 1. Ground Truth Retrieval
+Relevant regulatory values (EPA & SKKY) are retrieved using the RAG pipeline.
+
+### 2. Answer Parsing
+The LLM response is parsed to extract key parameters (e.g., pH, BOD, COD) using regex-based rules.
+
+### 3. Deterministic Comparison
+Extracted values are compared with ground truth:
+- Exact match → correct
+- Mismatch → incorrect
+
+### 4. Semantic Validation
+Responses are also checked for:
+- Relevance to the query
+- Consistency with retrieved context
+
+### 5. Final Decision
+Each response is labeled as:
+- `correct`
+- `incorrect`
 ---
 
 ## ⚙️ Features
