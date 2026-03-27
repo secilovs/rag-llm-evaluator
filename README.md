@@ -6,8 +6,6 @@ A deterministic evaluation framework that tests whether an LLM provides correct 
 
 > Accuracy: ~91.7% on mixed query batch test
 
-A deterministic evaluation framework that tests whether an LLM provides
-correct answers based on environmental regulation data (EPA & SKKY).
 
 ---
 
