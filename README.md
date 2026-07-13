@@ -1,83 +1,30 @@
-# 🔍 RAG + LLM Evaluation Engine
+RAG + LLM Evaluation — Proof of Concept
 
-## 🚨 Why This Project Exists
+A small experiment in evaluating LLM answers against ground truth, instead of asking another LLM to judge them.
 
-LLMs often generate answers that sound correct but are factually wrong (hallucinations).  
-This makes them unreliable in domains where accuracy is critical, such as environmental regulations.
+The question behind it
 
-This project addresses a key question:
+LLMs produce answers that sound confident but can be factually wrong. In regulated domains — wastewater discharge limits, for example — a fluent wrong answer is worse than no answer.
 
-**"Is the model actually correct — or just sounding correct?"**
+So: is the model actually correct, or does it just sound correct?
 
-![LLM Evaluation Engine](llm_evaluation_engine_800x600.png)
+Most evaluation setups answer this by asking a second LLM to grade the first. That inherits the same problem. This experiment takes a different route: compare the answer to the real regulatory value, using a rule, not a judgment.
 
-*A deterministic evaluation pipeline that enforces factual correctness using ground truth (without relying on LLM judgment)*
+What it does
+
+Given a question like "What is the EPA pH limit?", the system:
 
 
-## 🎯 What This System Does
+Identifies the parameter and source from the question (BOD, COD, TSS, pH — EPA or SKKY) using keyword matching.
+Looks up the ground truth from a hardcoded table of EPA and SKKY (Su Kirliliği Kontrolü Yönetmeliği) discharge limits.
+Retrieves context — the question is embedded with all-MiniLM-L6-v2, matched against a small ChromaDB collection, and the two closest passages are returned.
+Asks the LLM (Groq, Llama 3.1 8B, temperature=0) to answer using only that retrieved context.
+Evaluates deterministically — numeric values are extracted from the answer with regex and compared against the ground truth. Match → correct. Mismatch → incorrect. No LLM is involved in this decision.
 
-This is not a chatbot.
-
-It is an **evaluation engine** that:
-- generates answers using an LLM
-- validates them against real-world regulatory data
-- produces an objective correctness decision
-
----
-
-## 🧠 System Architecture
-
-User Question  
-↓  
-RAG Pipeline (ChromaDB + Sentence Transformers)  
-↓  
-LLM (Groq API – Llama 3.1)  
-↓  
-Ground Truth Engine (rule-based, deterministic)  
-↓  
-Evaluator (numeric + semantic comparison)
-
----
-
-## ⚙️ Core Capabilities
-
-- Deterministic validation WITHOUT relying on LLM judgment
-- Numeric extraction using regex
-- Rule-based correctness checking
-- RAG-based context retrieval
-- Batch evaluation for scalability
-- Quantitative accuracy metrics
-
----
-
-## 🧠 Evaluation Pipeline
-
-1. **Ground Truth Retrieval**  
-   Regulatory values (EPA & SKKY) are retrieved via RAG
-
-2. **Answer Parsing**  
-   Extract key parameters (BOD, COD, pH) using regex
-
-3. **Deterministic Comparison**  
-   - Exact match → correct  
-   - Mismatch → incorrect  
-
-4. **Semantic Validation**  
-   - Relevance to question  
-   - Consistency with retrieved context  
-
-5. **Final Decision**  
-   Output: `correct` / `incorrect`
-
----
-
-## 📊 Example Output
-
-Input:  
-pH limit EPA?
 
 Output:
-{
+
+json{
   "parameter": "PH",
   "ground_truth": "6.0-9.0",
   "llm_answer": "The pH limit according to the EPA is 6.0 to 9.0.",
@@ -85,84 +32,48 @@ Output:
   "source": "EPA"
 }
 
-Batch Result:  
-Total: 12 | Correct: 11 | Accuracy: 91.67%
+Stack
 
----
+ComponentTechnologyLanguagePython 3.10+Vector storeChromaDBEmbeddingsSentence Transformers (all-MiniLM-L6-v2)LLMGroq (Llama 3.1 8B)EvaluationRegex + rule-based comparison
 
-## 📦 Tech Stack
+Scope and limitations
 
-| Component       | Technology              |
-|----------------|------------------------|
-| Language       | Python 3.10+           |
-| Vector Store   | ChromaDB               |
-| Embeddings     | Sentence Transformers  |
-| LLM            | Groq (Llama 3.1)       |
-| Parsing        | Regex                  |
+This is a proof of concept, not a production system. Specifically:
 
----
 
-## 🚀 Getting Started
+The document collection is five hardcoded sentences, not a parsed corpus.
+Ground truth is a hardcoded dictionary covering four parameters across two sources.
+Source detection is crude: the query defaults to EPA unless it mentions Turkey or SKKY.
+The evaluator compares numbers only. Format and unit checking is not enforced.
+Ambiguous or out-of-scope queries will fail rather than degrade gracefully.
 
-git clone https://github.com/secilovs/rag-llm-evaluator.git  
-cd rag-llm-evaluator  
-pip install -r requirements.txt  
-python main.py  
 
-Set API key:
+What it demonstrates
 
+The point is the evaluation design, not the scale:
+
+
+Ground truth beats LLM-as-judge when the correct answer is knowable.
+temperature=0 matters — an evaluator needs the model under test to be reproducible.
+Fluency is not correctness, and a rule-based check will say so where a second LLM might not.
+
+
+Running it
+
+bashgit clone https://github.com/secilovs/rag-llm-evaluator.git
+cd rag-llm-evaluator
+pip install -r requirements.txt
 export GROQ_API_KEY=your_key_here
+python rag_pipeline.py
 
----
+Possible next steps
 
-## ⚠️ Limitations
 
-- Ambiguous queries may fail (e.g., missing source)
-- Limited to EPA and SKKY datasets
-- Basic source detection logic
-
----
-
-## 🔮 Roadmap
-
-- Improved query understanding (NER / intent detection)
-- Multi-source conflict resolution
-- Expanded regulatory datasets
-- Advanced evaluation metrics (RAGAS)
-
----
-
-## 💡 Key Insight
-
-Fluency ≠ correctness.
-
-This system enforces **deterministic evaluation using ground truth data**, ensuring that LLM outputs are not only relevant but factually accurate.
-
-Unlike typical evaluation approaches:
-- it does not rely on LLM self-judgment  
-- it provides objective, rule-based validation  
-
----
-
-## 🎯 Why It Matters
-
-This project demonstrates the ability to:
-
-- evaluate LLM outputs beyond surface-level fluency
-- design deterministic validation systems
-- build reliable pipelines for high-stakes domains
-
-Applicable to:
-
-- AI evaluation roles  
-- LLM QA / benchmarking systems  
-- regulatory and compliance-focused AI applications  
+Parse the actual epa.txt and skky.txt files instead of the hardcoded document list
+Intent detection for source and parameter, replacing keyword matching
+Unit and format validation alongside numeric comparison
+Wider regulatory coverage
 
 
 
-
-<br><br><br><br><br>
-
-<p align="center" style="font-size: 11px; opacity: 0.6;">
-  👤 Seçil Bayar — Environmental Engineer (PhD) → LLM Evaluation & AI Systems
-</p>
+Seçil Bayar — Environmental Engineer (PhD) → LLM Evaluation
